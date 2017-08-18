@@ -4,6 +4,7 @@ import com.alexandrelion.reactive.InternalDatabase;
 import com.alexandrelion.reactive.entity.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -16,9 +17,8 @@ public class TransactionController {
   @Autowired
   private InternalDatabase internalDatabase;
 
-  @GetMapping
+  @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
   public Flux<Transaction> findAll() {
-    this.internalDatabase.get().subscribe(System.out::println);
     return this.internalDatabase.get();
   }
 

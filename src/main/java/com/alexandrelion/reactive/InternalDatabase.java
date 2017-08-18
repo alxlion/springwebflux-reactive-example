@@ -1,9 +1,12 @@
 package com.alexandrelion.reactive;
 
 import com.alexandrelion.reactive.entity.Transaction;
+import org.reactivestreams.Subscriber;
 import org.springframework.context.annotation.Scope;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -22,11 +25,11 @@ public class InternalDatabase {
 
   public Mono<Transaction> add (Transaction t) {
     this.memory.add(t);
-    return Mono.just(t);
+    return Mono.just(t).subscribeOn(Schedulers.parallel());
   }
 
   public Flux<Transaction> get() {
-    return Flux.fromIterable(this.memory).delayElements(Duration.ofMillis(300));
+    return Flux.fromIterable(new ArrayList<>(this.memory)).delayElements(Duration.ofMillis(300)).subscribeOn(Schedulers.parallel());
   }
 
 }
