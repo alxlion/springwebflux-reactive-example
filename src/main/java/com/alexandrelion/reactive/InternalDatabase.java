@@ -25,11 +25,13 @@ public class InternalDatabase {
 
   public Mono<Transaction> add (Transaction t) {
     this.memory.add(t);
-    return Mono.just(t).subscribeOn(Schedulers.parallel());
+    return Mono.just(t);
   }
 
   public Flux<Transaction> get() {
-    return Flux.fromIterable(new ArrayList<>(this.memory)).delayElements(Duration.ofMillis(300)).subscribeOn(Schedulers.parallel());
+    return Flux
+      .fromIterable(new ArrayList<>(this.memory))
+      .delayElements(Duration.ofMillis(300));
   }
 
 }
